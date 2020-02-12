@@ -169,13 +169,13 @@ $("#compare").click(async () => {
     ccr2 = ccr2.user;
     // add results
     $("#cfresult1").css("background-color", cfColours[cfr1.rank].color);
-    $("#cfresult1").text(`Rating: ${cfr1.rating}, Rank: ${cfr1.rank}`);
+    $("#cfresult1").text(`Codeforces Rating: ${cfr1.rating}, Rank: ${cfr1.rank}`);
     $("#cfresult2").css("background-color", cfColours[cfr2.rank].color);
-    $("#cfresult2").text(`Rating: ${cfr2.rating}, Rank: ${cfr2.rank}`);
+    $("#cfresult2").text(`Codeforces Rating: ${cfr2.rating}, Rank: ${cfr2.rank}`);
     $("#ccresult1").css("background-color", ccColours[ccr1.stars]);
-    $("#ccresult1").text(`Rating: ${ccr1.rating}, Stars: ${ccr1.stars}`);
+    $("#ccresult1").text(`Codechef Rating: ${ccr1.rating}, Stars: ${ccr1.stars}`);
     $("#ccresult2").css("background-color", ccColours[ccr2.stars]);
-    $("#ccresult2").text(`Rating: ${ccr2.rating}, Stars: ${ccr2.stars}`);
+    $("#ccresult2").text(`Codechef Rating: ${ccr2.rating}, Stars: ${ccr2.stars}`);
 
     const cfRating1 = parseInt(cfr1.rating, 10);
     const cfRating2 = parseInt(cfr2.rating, 10);
