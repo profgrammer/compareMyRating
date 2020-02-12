@@ -1,0 +1,206 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Profile compare</title>
+<link href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" rel="stylesheet">
+<script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
+<style>
+    .hidden {
+        visibility: hidden;
+    }
+</style>
+</head>
+<body>
+    <marquee behavior="" direction="" id="news"></marquee>
+    <div class="container mt-5 bm-3">
+    <div class="row">
+        <div class="col-lg-6 col-sm-12 mb-3">
+            
+            <div class="card card-body bg-secondary">
+                <div class="h4 text-light">User 1 details</div>
+                <div class="input-group mb-3">
+                    <div class="input-group-prepend">
+                        <span class="input-group-text" id="addon-wrapping">@</span>
+                    </div>
+                    <input type="text" class="form-control cf" placeholder="User 1 Codeforces username" aria-label="Username" aria-describedby="addon-wrapping">
+                </div>
+                <div class="input-group flex-nowrap">
+                    <div class="input-group-prepend">
+                        <span class="input-group-text" id="addon-wrapping">@</span>
+                    </div>
+                    <input type="text" class="form-control cc" placeholder="User 1 Codechef username" aria-label="Username" aria-describedby="addon-wrapping">
+                </div>
+            </div>
+        </div>
+        <div class="col-lg-6 col-sm-12 mb-3">
+            <div class="card card-body bg-dark">
+                <div class="h4 text-muted">User 2 details</div>
+                <div class="input-group mb-3">
+                    <div class="input-group-prepend">
+                        <span class="input-group-text" id="addon-wrapping">@</span>
+                    </div>
+                    <input type="text" class="form-control cf" placeholder="User 2 Codeforces username" aria-label="Username" aria-describedby="addon-wrapping">
+                </div>
+                <div class="input-group flex-nowrap">
+                    <div class="input-group-prepend">
+                        <span class="input-group-text" id="addon-wrapping">@</span>
+                    </div>
+                    <input type="text" class="form-control cc" placeholder="User 2 Codechef username" aria-label="Username" aria-describedby="addon-wrapping">
+                </div>
+            </div>
+        </div>
+    <div id="compare" class="col-4 offset-4 btn btn-primary mb-3">COMPARE!</div>
+    <div  class="col-12 text-center customloader hidden">
+        <div class="spinner-border mb-3" role="status">
+            <span class="sr-only">Loading...</span>
+        </div>
+    </div>
+    <div class="col-12 results hidden">
+        <div class="card card-body">
+            <div class="h4 mx-auto mb-3">Results</div>
+            <div class="row">
+                <div class="col-6">
+                    <div id="cfresult1" class="alert">Result</div>
+                    <div id="ccresult1" class="alert">Result</div>
+                    <div id="totalresult1" class="alert">Result</div>
+                </div>
+                <div class="col-6">
+                    <div id="cfresult2" class="alert">Result</div>
+                    <div id="ccresult2" class="alert">Result</div>
+                    <div id="totalresult2" class="alert">Result</div>
+                </div>
+            </div>
+        </div>
+    </div>
+    </div>
+    </div>
+</body>
+<script src="rss-parser.min.js"></script>
+<script type="text/javascript">
+
+$(document).ready(async function() {
+    const CORS_PROXY = "https://cors-anywhere.herokuapp.com/"
+ 
+    let parser = new RSSParser();
+    let op = "";
+    parser.parseURL(CORS_PROXY + 'https://www.reddit.com/r/programming/.rss', function(err, feed) {
+    feed.items.forEach(item => {
+        op += `${item.title} (${item.link}) `;
+    })
+    $("#news").text(op);
+    })
+})
+
+const cfColours = {
+"newbie" : {
+"color" : "#C1C1C1"
+},
+"pupil" : {
+"color" : "#AAFFAA"
+},
+"specialist" : {
+"color" : "#77FF77"
+},
+"expert" : {
+"color" : "#A8A8FC"
+},
+"candidate master" : {
+"color" : "#FF88FF"
+},
+"master" : {
+"color" : "#FFCC88"
+},
+"international master" : {
+"color" : "#F79A60"
+},
+"grandmaster" : {
+"color" : "#FF7777"
+},
+"international grandmaster" : {
+"color" : "#FF3333"
+},
+"legendary grandmaster" : {
+"color" : "#FF3333"
+}
+};
+
+const ccColours ={
+"7" : "#D0021B",
+"6" : "#FF8C1A",
+"5" : "#FFBF00",
+"4" : "#684273",
+"3" : "#3366CC",
+"2" : "#297F1B",
+"1" : "#666666",
+};
+
+
+$("#compare").click(async () => {
+    $(".customloader").removeClass("hidden");
+    $(".results").addClass("hidden");
+    const cf = document.querySelectorAll(".cf"), cc = document.querySelectorAll(".cc");
+    const cf1 = cf[0].value, cf2 = cf[1].value, cc1 = cc[0].value, cc2 = cc[1].value;
+    console.log(cf1, cf2, cc1, cc2);
+    if((cf1 === "" && cc1 === "") || (cf2 === "" && cc2 === "")) {
+        alert("please enter a username for at least 1 website!");
+        return;
+    }
+    let cfr1, cfr2, ccr1, ccr2;
+    cfr1 = await fetch(`https://codeforces.com/api/user.info?handles=${cf1}`);
+    cfr1 = await cfr1.json();
+    cfr2 = await fetch(`https://codeforces.com/api/user.info?handles=${cf2}`);
+    cfr2 = await cfr2.json();
+    if(cfr1.status === "FAILED" || cfr2.status === "FAILED") {
+        alert("invalid codeforces usernames!");
+        return;
+    }
+    cfr1 = cfr1.result[0];
+    cfr2 = cfr2.result[0];
+    
+    ccr1 = await fetch(`https://aitcodechefapi.herokuapp.com/?username=${cc1}`)
+    ccr1 = await ccr1.json();
+    ccr2 = await fetch(`https://aitcodechefapi.herokuapp.com/?username=${cc2}`)
+    ccr2 = await ccr2.json();
+    if(ccr1.success === false || ccr1.success === false) {
+        alert("invalid codechef usernames!");
+        return;
+    }
+    ccr1 = ccr1.user;
+    ccr2 = ccr2.user;
+    // add results
+    $("#cfresult1").css("background-color", cfColours[cfr1.rank].color);
+    $("#cfresult1").text(`Rating: ${cfr1.rating}, Rank: ${cfr1.rank}`);
+    $("#cfresult2").css("background-color", cfColours[cfr2.rank].color);
+    $("#cfresult2").text(`Rating: ${cfr2.rating}, Rank: ${cfr2.rank}`);
+    $("#ccresult1").css("background-color", ccColours[ccr1.stars]);
+    $("#ccresult1").text(`Rating: ${ccr1.rating}, Stars: ${ccr1.stars}`);
+    $("#ccresult2").css("background-color", ccColours[ccr2.stars]);
+    $("#ccresult2").text(`Rating: ${ccr2.rating}, Stars: ${ccr2.stars}`);
+
+    const cfRating1 = parseInt(cfr1.rating, 10);
+    const cfRating2 = parseInt(cfr2.rating, 10);
+    console.log(typeof cfr1.rating);
+    const ccRating1 = parseInt(ccr1.rating.split(' ')[0], 10);
+    const ccRating2 = parseInt(ccr2.rating.split(' ')[0], 10);
+    console.log(ccRating1, ccRating2);
+    const totalRating1 = parseInt((cfRating1 + .5*ccRating1) / 1.5, 10);
+    const totalRating2 = parseInt((cfRating2 + .5*ccRating2) / 1.5, 10);
+    
+    if(totalRating1 > totalRating2) {
+        $("#totalresult1").addClass("alert-success");
+        $("#totalresult2").addClass("alert-danger");
+        $("#totalresult1").text(`Total rating: ${totalRating1} 🎉🎉🎉`);
+        $("#totalresult2").text(`Total rating: ${totalRating2} 😭😭😭`);
+    }
+    else {
+        $("#totalresult2").addClass("alert-success");
+        $("#totalresult1").addClass("alert-danger");
+        $("#totalresult1").text(`Total rating: ${totalRating1} 😭😭😭`);
+        $("#totalresult2").text(`Total rating: ${totalRating2} 🎉🎉🎉`);
+    }
+    $(".customloader").addClass("hidden");
+    $(".results").removeClass("hidden");
+
+})
+</script>
+</html>
