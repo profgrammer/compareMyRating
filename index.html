@@ -193,12 +193,16 @@ $("#compare").click(async () => {
     const totalRating2 = parseInt((cfRating2 + .5*ccRating2) / 1.5, 10);
     
     if(totalRating1 > totalRating2) {
+        $("#totalresult1").removeClass("alert-danger");
+        $("#totalresult2").removeClass("alert-success");
         $("#totalresult1").addClass("alert-success");
         $("#totalresult2").addClass("alert-danger");
         $("#totalresult1").text(`Total rating: ${totalRating1} 🎉🎉🎉`);
         $("#totalresult2").text(`Total rating: ${totalRating2} 😭😭😭`);
     }
     else {
+        $("#totalresult2").removeClass("alert-danger");
+        $("#totalresult1").removeClass("alert-success");
         $("#totalresult2").addClass("alert-success");
         $("#totalresult1").addClass("alert-danger");
         $("#totalresult1").text(`Total rating: ${totalRating1} 😭😭😭`);
