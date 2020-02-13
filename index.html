@@ -134,6 +134,12 @@ const ccColours ={
 "1" : "#666666",
 };
 
+function getData(ajaxurl) { 
+  return $.ajax({
+    url: ajaxurl,
+    type: 'GET',
+  });
+};
 
 $("#compare").click(async () => {
     $(".customloader").removeClass("hidden");
@@ -146,10 +152,10 @@ $("#compare").click(async () => {
         return;
     }
     let cfr1, cfr2, ccr1, ccr2;
-    cfr1 = await fetch(`https://codeforces.com/api/user.info?handles=${cf1}`);
-    cfr1 = await cfr1.json();
-    cfr2 = await fetch(`https://codeforces.com/api/user.info?handles=${cf2}`);
-    cfr2 = await cfr2.json();
+    cfr1 = await getData(`https://codeforces.com/api/user.info?handles=${cf1}`);
+    // cfr1 = await cfr1.json();
+    cfr2 = await getData(`https://codeforces.com/api/user.info?handles=${cf2}`);
+    // cfr2 = await cfr2.json();
     if(cfr1.status === "FAILED" || cfr2.status === "FAILED") {
         alert("invalid codeforces usernames!");
         return;
@@ -157,10 +163,10 @@ $("#compare").click(async () => {
     cfr1 = cfr1.result[0];
     cfr2 = cfr2.result[0];
     
-    ccr1 = await fetch(`https://aitcodechefapi.herokuapp.com/?username=${cc1}`)
-    ccr1 = await ccr1.json();
-    ccr2 = await fetch(`https://aitcodechefapi.herokuapp.com/?username=${cc2}`)
-    ccr2 = await ccr2.json();
+    ccr1 = await getData(`https://aitcodechefapi.herokuapp.com/?username=${cc1}`)
+    // ccr1 = await ccr1.json();
+    ccr2 = await getData(`https://aitcodechefapi.herokuapp.com/?username=${cc2}`)
+    // ccr2 = await ccr2.json();
     if(ccr1.success === false || ccr1.success === false) {
         alert("invalid codechef usernames!");
         return;
