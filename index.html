@@ -149,6 +149,7 @@ $("#compare").click(async () => {
     console.log(cf1, cf2, cc1, cc2);
     if((cf1 === "" && cc1 === "") || (cf2 === "" && cc2 === "")) {
         alert("please enter a username for at least 1 website!");
+        $(".customloader").addClass("hidden");
         return;
     }
     let cfr1, cfr2, ccr1, ccr2;
@@ -158,6 +159,7 @@ $("#compare").click(async () => {
     // cfr2 = await cfr2.json();
     if(cfr1.status === "FAILED" || cfr2.status === "FAILED") {
         alert("invalid codeforces usernames!");
+        $(".customloader").addClass("hidden");
         return;
     }
     cfr1 = cfr1.result[0];
@@ -169,6 +171,7 @@ $("#compare").click(async () => {
     // ccr2 = await ccr2.json();
     if(ccr1.success === false || ccr1.success === false) {
         alert("invalid codechef usernames!");
+        $(".customloader").addClass("hidden");
         return;
     }
     ccr1 = ccr1.user;
